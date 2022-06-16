@@ -1,0 +1,77 @@
+name: 'Run Cypress tests on Currents dev'
+description: 'Runs Cypress end-to-end test on Currents dev platform'
+inputs:
+  github_token:
+    description: 'Github token'
+    required: false
+  username:
+    description: "Username for test run"
+    required: true
+  password: 
+    description: "Password for Username"
+    required: true
+  env:
+    description: "Name of the env"
+    required: true
+    default: staging
+  customEnv:
+    description: "Url of custom env (PR deploy, dev/prod env)"
+    required: false
+  url:
+    description: "One of the env urls we usually use for tests: dev, stage, prod"
+    required: true
+    default: 'https://bowery-staging.herokuapp.com'
+  spec_file:
+    description: "--spec flag arg in cypress cli"
+    required: true
+    default: "cypress/integration/not_full_reports/**/*.spec.ts"
+  tags:
+    description: "Tags for cypress-grep"
+    required: true
+  record_key:
+    description: "record key used to activate test results recording on Dashboard"
+    required: true
+
+runs:
+  using: "composite"
+  steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+      with:
+        repository: 'Bowery-RES/webapp-ui-automation'
+        token: ${{ inputs.github_token }}
+
+    - name: Cache node modules
+      uses: actions/cache@v2
+      env:
+        cache-name: cache-node-modules
+      with:
+        # npm cache files are stored in `~/.npm` on Linux/macOS
+        path: ~/.npm
+        key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('./package-lock.json') }}
+        restore-keys: |
+          ${{ runner.os }}-build-${{ env.cache-name }}-
+          ${{ runner.os }}-build-
+          ${{ runner.os }}-
+
+    - name: Cache node modules
+      run: npm i cypress@9.6.0 -g
+      shell: bash
+    
+    - name: Install Currents globally
+      run: npm i @currents/cli -g
+      shell: bash
+
+    - name: Install Dependencies
+      run: npm install
+      shell: bash
+
+    - name: Run Cypress not snapshot tests on Currents.dev
+      run: currents run --config baseUrl=${{ inputs.customEnv == '' && inputs.url ||  inputs.customEnv }} --tag ${{ inputs.env }} --spec ${{ inputs.spec_file }} --env ${{ inputs.tags }} --browser chrome --record --parallel --key ${{ inputs.record_key }} --ci-build-id "${{ github.repository }}-${{ github.run_id }}-${{ github.run_attempt}}"
+      shell: bash  
+      env:
+        CYPRESS_USERNAME: ${{ inputs.USERNAME }}
+        CYPRESS_PASSWORD: ${{ inputs.PASSWORD }}
+        CYPRESS_url: ${{ inputs.env }}
+        CYPRESS_customEnv: ${{inputs.customEnv }}
+        CYPRESS_grepFilterSpecs: "true"
