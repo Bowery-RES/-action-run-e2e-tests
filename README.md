@@ -1,7 +1,4 @@
 # action-run-e2e-tests
-Run end-to-end tests with some specific to us parameters
-
-
 This GH Action is intended to encapsulate logic for running end-to-end tests (written in [Cypress](https://docs.cypress.io/)) with [Currents dev](https://currents.dev/#faq) platform for [parallelization](https://docs.cypress.io/guides/guides/parallelization).
 
 ## Input description
@@ -17,4 +14,3 @@ This GH Action is intended to encapsulate logic for running end-to-end tests (wr
 | spec_file          | [Pattern string](https://docs.cypress.io/guides/guides/command-line#cypress-run-spec-lt-spec-gt) which points Cypress what spec files to run.                                                                                                                                                                   |
 | tags        | Tags necessary to run specific tests with [cypress-grep](https://github.com/cypress-io/cypress-grep) plugin (tests for comp-plex, key_info,rent_comps and etc).                                                                                                                          |
 | record_key    | [Special string](https://currents.dev/readme/guides/record-key) which used to accosiate our test runs with Currents dev platform.                                                                                                                     |
-|
