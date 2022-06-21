@@ -28,6 +28,7 @@ inputs:
   tags:
     description: "Tags for cypress-grep"
     required: true
+    default: grep=,grepTags=@smoke,burn=
   record_key:
     description: "record key used to activate test results recording on Dashboard"
     required: true
@@ -35,14 +36,26 @@ inputs:
 runs:
   using: "composite"
   steps:
+
+    - name: Show action's inputs
+      shell: bash
+      run: |
+          echo "github_token=${{ inputs.github_token }}"
+          echo "username=${{ inputs.USERNAME }}"
+          echo "env=${{ inputs.env }}"
+          echo "customEnv=${{ inputs.customEnv }}"
+          echo "spec_file=${{ inputs.spec_file }}"
+          echo "tags=${{ inputs.tags }}"
+          echo "record_key=${{ inputs.record_key }}"
+
     - name: Checkout
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
       with:
         repository: 'Bowery-RES/webapp-ui-automation'
         token: ${{ inputs.github_token }}
 
     - name: Cache node modules
-      uses: actions/cache@v2
+      uses: actions/cache@v3
       env:
         cache-name: cache-node-modules
       with:
