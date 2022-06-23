@@ -4,12 +4,6 @@ inputs:
   github_token:
     description: 'Github token'
     required: false
-  username:
-    description: "Username for test run"
-    required: true
-  password: 
-    description: "Password for Username"
-    required: true
   env:
     description: "Name of the env"
     required: true
@@ -83,8 +77,8 @@ runs:
       run: currents run --config baseUrl=${{ inputs.customEnv == '' && inputs.url ||  inputs.customEnv }} --tag ${{ inputs.env }} --spec ${{ inputs.spec_file }} --env ${{ inputs.tags }} --browser chrome --record --parallel --key ${{ inputs.record_key }} --ci-build-id "${{ github.repository }}-${{ github.run_id }}-${{ github.run_attempt}}"
       shell: bash  
       env:
-        CYPRESS_USERNAME: ${{ inputs.USERNAME }}
-        CYPRESS_PASSWORD: ${{ inputs.PASSWORD }}
+        CYPRESS_USERNAME: ${{ secrets.USERNAME }}
+        CYPRESS_PASSWORD: ${{ secrets.PASSWORD }}
         CYPRESS_url: ${{ inputs.env }}
         CYPRESS_customEnv: ${{inputs.customEnv }}
         CYPRESS_grepFilterSpecs: "true"
