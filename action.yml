@@ -24,7 +24,7 @@ inputs:
   spec_file:
     description: "--spec flag arg in cypress cli"
     required: true
-    default: "cypress/integration/not_full_reports/**/*.spec.ts"
+    default: "cypress/integration/**/*.spec.ts"
   tags:
     description: "Tags for cypress-grep"
     required: true
