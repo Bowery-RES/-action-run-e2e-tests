@@ -85,14 +85,14 @@ runs:
     - name: Configure secrets
       uses: aws-actions/configure-aws-credentials@v1
       with:
-          role-to-assume: {{ inputs.role_to_assume }}
+          role-to-assume: arn:aws:iam::814827541967:role/GithubOIDC-Role-QMKR3DR5WV3B
           aws-region: 'us-east-1'
 
     - name: Set secrets to GH environment
       uses: Bowery-RES/action-aws-secrets@v1.1
       with:
           secrets: |
-            Github/Cypress/Roles
+            Github/Cypress/User_Roles
           namespace: false
 
     - name: Run Cypress not snapshot tests on Currents.dev
