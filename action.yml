@@ -79,6 +79,19 @@ runs:
       run: npm install
       shell: bash
 
+    - name: Configure secrets
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+          role-to-assume: arn:aws:iam::814827541967:role/GithubOIDC-Role-QMKR3DR5WV3B
+          aws-region: 'us-east-1'
+
+    - name: Set secrets to GH environment
+      uses: Bowery-RES/action-aws-secrets@v1.1
+      with:
+          secrets: |
+            Github/Cypress/User_Roles
+          namespace: false
+
     - name: Run Cypress not snapshot tests on Currents.dev
       run: currents run --config baseUrl=${{ inputs.customEnv == '' && inputs.url ||  inputs.customEnv }} --tag ${{ inputs.env }} --spec ${{ inputs.spec_file }} --env ${{ inputs.tags }} --browser chrome --record --parallel --key ${{ inputs.record_key }} --ci-build-id "${{ github.repository }}-${{ github.run_id }}-${{ github.run_attempt}}"
       shell: bash  
