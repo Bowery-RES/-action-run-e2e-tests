@@ -32,6 +32,9 @@ inputs:
   record_key:
     description: "record key used to activate test results recording on Dashboard"
     required: true
+  role_to_assume:
+    description: "role which used to connect to AWS"
+    required: true
 
 runs:
   using: "composite"
@@ -78,6 +81,19 @@ runs:
     - name: Install Dependencies
       run: npm install
       shell: bash
+
+    - name: Configure secrets
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+          role-to-assume: {{ inputs.role_to_assume }}
+          aws-region: 'us-east-1'
+
+    - name: Set secrets to GH environment
+      uses: Bowery-RES/action-aws-secrets@v1.1
+      with:
+          secrets: |
+            Github/Cypress/Roles
+          namespace: false
 
     - name: Run Cypress not snapshot tests on Currents.dev
       run: currents run --config baseUrl=${{ inputs.customEnv == '' && inputs.url ||  inputs.customEnv }} --tag ${{ inputs.env }} --spec ${{ inputs.spec_file }} --env ${{ inputs.tags }} --browser chrome --record --parallel --key ${{ inputs.record_key }} --ci-build-id "${{ github.repository }}-${{ github.run_id }}-${{ github.run_attempt}}"
