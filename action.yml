@@ -32,9 +32,6 @@ inputs:
   record_key:
     description: "record key used to activate test results recording on Dashboard"
     required: true
-  role_to_assume:
-    description: "role which used to connect to AWS"
-    required: true
 
 runs:
   using: "composite"
