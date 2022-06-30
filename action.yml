@@ -32,6 +32,10 @@ inputs:
   record_key:
     description: "record key used to activate test results recording on Dashboard"
     required: true
+  grep_filter_specs:
+    description: "Skip test specs when using cypress-grep from tag retrieve"
+    required: false
+    default: 'true'
 
 runs:
   using: "composite"
@@ -100,4 +104,4 @@ runs:
         CYPRESS_PASSWORD: ${{ inputs.PASSWORD }}
         CYPRESS_url: ${{ inputs.env }}
         CYPRESS_customEnv: ${{inputs.customEnv }}
-        CYPRESS_grepFilterSpecs: "true"
+        CYPRESS_grepFilterSpecs: ${{ inputs.grep_filter_specs }}
