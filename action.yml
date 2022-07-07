@@ -36,6 +36,10 @@ inputs:
     description: "Skip test specs when using cypress-grep from tag retrieve"
     required: false
     default: 'true'
+  ref_name:
+    description: "`ref` param for actions/checkout"
+    required: false
+    default: 'master'
 
 runs:
   using: "composite"
@@ -57,6 +61,7 @@ runs:
       with:
         repository: 'Bowery-RES/webapp-ui-automation'
         token: ${{ inputs.github_token }}
+        ref: ${{ inputs.ref }}
 
     - name: Cache node modules
       uses: actions/cache@v3
