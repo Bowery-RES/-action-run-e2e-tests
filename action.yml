@@ -72,7 +72,7 @@ runs:
           ${{ runner.os }}-
 
     - name: Cache node modules
-      run: npm i cypress@9.6.0 -g
+      run: npm i cypress@10.2.0 -g
       shell: bash
     
     - name: Install Currents globally
