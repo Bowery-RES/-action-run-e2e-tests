@@ -39,7 +39,6 @@ inputs:
   ref_name:
     description: "`ref` param for actions/checkout"
     required: false
-    default: 'master'
 
 runs:
   using: "composite"
