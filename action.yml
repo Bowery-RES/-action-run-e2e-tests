@@ -45,8 +45,8 @@ runs:
       run: |
           echo "github_token=${{ inputs.github_token }}"
           echo "username=${{ inputs.USERNAME }}"
-          echo "env=${{ inputs.env }}"
-          echo "customEnv=${{ inputs.customEnv }}"
+          echo "url=${{ inputs.url }}"
+          echo "customUrl=${{ inputs.customUrl }}"
           echo "spec_file=${{ inputs.spec_file }}"
           echo "tags=${{ inputs.tags }}"
           echo "record_key=${{ inputs.record_key }}"
