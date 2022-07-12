@@ -10,17 +10,13 @@ inputs:
   password: 
     description: "Password for Username"
     required: true
-  env:
-    description: "Name of the env"
+  url:
+    description: "Name of the test url (dev, staging, prod, custom)"
     required: true
     default: staging
-  customEnv:
+  customUrl:
     description: "Url of custom env (PR deploy, dev/prod env)"
     required: false
-  url:
-    description: "One of the env urls we usually use for tests: dev, stage, prod"
-    required: true
-    default: 'https://bowery-staging.herokuapp.com'
   spec_file:
     description: "--spec flag arg in cypress cli"
     required: true
@@ -49,8 +45,8 @@ runs:
       run: |
           echo "github_token=${{ inputs.github_token }}"
           echo "username=${{ inputs.USERNAME }}"
-          echo "env=${{ inputs.env }}"
-          echo "customEnv=${{ inputs.customEnv }}"
+          echo "url=${{ inputs.url }}"
+          echo "customUrl=${{ inputs.customUrl }}"
           echo "spec_file=${{ inputs.spec_file }}"
           echo "tags=${{ inputs.tags }}"
           echo "record_key=${{ inputs.record_key }}"
@@ -76,7 +72,7 @@ runs:
           ${{ runner.os }}-
 
     - name: Cache node modules
-      run: npm i cypress@9.6.0 -g
+      run: npm i cypress@10.2.0 -g
       shell: bash
     
     - name: Install Currents globally
@@ -101,11 +97,11 @@ runs:
           namespace: false
 
     - name: Run Cypress not snapshot tests on Currents.dev
-      run: currents run --config baseUrl=${{ inputs.customEnv == '' && inputs.url ||  inputs.customEnv }} --tag ${{ inputs.env }} --spec ${{ inputs.spec_file }} --env ${{ inputs.tags }} --browser chrome --record --parallel --key ${{ inputs.record_key }} --ci-build-id "${{ github.repository }}-${{ github.run_id }}-${{ github.run_attempt}}"
+      run: currents run --tag ${{ inputs.env }} --spec ${{ inputs.spec_file }} --env ${{ inputs.tags }} --browser chrome --record --parallel --key ${{ inputs.record_key }} --ci-build-id "${{ github.repository }}-${{ github.run_id }}-${{ github.run_attempt}}"
       shell: bash  
       env:
         CYPRESS_USERNAME: ${{ inputs.USERNAME }}
         CYPRESS_PASSWORD: ${{ inputs.PASSWORD }}
-        CYPRESS_url: ${{ inputs.env }}
-        CYPRESS_customEnv: ${{inputs.customEnv }}
+        CYPRESS_url: ${{ inputs.url }}
+        CYPRESS_customUrl: ${{ inputs.customUrl == '' && '' ||  inputs.customUrl }}
         CYPRESS_grepFilterSpecs: ${{ inputs.grep_filter_specs }}
