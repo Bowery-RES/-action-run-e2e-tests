@@ -97,7 +97,7 @@ runs:
           namespace: false
 
     - name: Run Cypress not snapshot tests on Currents.dev
-      run: currents run --tag ${{ inputs.env }} --spec ${{ inputs.spec_file }} --env ${{ inputs.tags }} --browser chrome --record --parallel --key ${{ inputs.record_key }} --ci-build-id "${{ github.repository }}-${{ github.run_id }}-${{ github.run_attempt}}"
+      run: currents run --tag ${{ inputs.env }} --spec ${{ inputs.spec_file }} --env ${{ inputs.tags }} --browser chrome --record --parallel --key ${{ inputs.record_key }} --ci-build-id "${{ github.repository }}-${{ github.run_id }}-${{ github.job }}-${{ github.run_attempt}}"
       shell: bash  
       env:
         CYPRESS_USERNAME: ${{ inputs.USERNAME }}
