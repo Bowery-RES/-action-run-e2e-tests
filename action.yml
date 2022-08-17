@@ -59,7 +59,7 @@ runs:
         ref: ${{ inputs.ref }}
 
     - name: Install Dependencies
-      uses: bahmutov/npm-install@v1
+      uses: bahmutov/npm-install@latest
 
     - name: Install Cypress globally
       run: npm i cypress@10.3.1 -g
