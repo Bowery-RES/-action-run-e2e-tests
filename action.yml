@@ -57,17 +57,13 @@ runs:
         repository: 'Bowery-RES/webapp-ui-automation'
         token: ${{ inputs.github_token }}
         ref: ${{ inputs.ref }}
-
-    # - name: Install Cypress globally
-    #   run: npm i cypress@10.3.1 -g --unsafe-perm
-    #   shell: bash
     
-    - name: Install Currents globally
-      run: npm i @currents/cli -g --unsafe-perm
-      shell: bash
-
     - name: Install Dependencies
-      uses: bahmutov/npm-install@v1.8.21
+      uses: bahmutov/npm-install@v1.8.21    
+
+    - name: Install Currents globally
+      run: npm i @currents/cli -g
+      shell: bash
 
     - name: Configure secrets
       if: ${{ !env.ACT }} 
@@ -83,6 +79,8 @@ runs:
           secrets: |
             Github/Cypress/User_Roles
             Github/Cypress/Launch_Darkly
+            Github/Cypress/Data_Dog_Api_Key
+            Github/Cypress/Current_Dev_Record_Key
           namespace: false
 
 
