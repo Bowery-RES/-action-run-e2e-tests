@@ -70,12 +70,14 @@ runs:
       shell: bash
 
     - name: Configure secrets
+      if: ${{ !env.ACT }} 
       uses: aws-actions/configure-aws-credentials@v1
       with:
           role-to-assume: arn:aws:iam::814827541967:role/GithubOIDC-Role-QMKR3DR5WV3B
           aws-region: 'us-east-1'
 
     - name: Set secrets to GH environment
+      if: ${{ !env.ACT }} 
       uses: Bowery-RES/action-aws-secrets@v1.2
       with:
           secrets: |
