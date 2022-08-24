@@ -57,13 +57,13 @@ runs:
         repository: 'Bowery-RES/webapp-ui-automation'
         token: ${{ inputs.github_token }}
         ref: ${{ inputs.ref }}
-        
+
     - name: Install Cypress globally
-      run: npm i cypress@10.3.1 -g --unsafe-perm --silent
+      run: npm i cypress@10.3.1 -g --unsafe-perm
       shell: bash
     
     - name: Install Currents globally
-      run: npm i @currents/cli -g --unsafe-perm --silent
+      run: npm i @currents/cli -g --unsafe-perm
       shell: bash
 
     - name: Install Dependencies
