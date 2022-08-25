@@ -81,6 +81,7 @@ runs:
           secrets: |
             Github/Cypress/User_Roles
             Github/Cypress/Launch_Darkly
+            Github/Cypress/Comp_plex_Database
           namespace: false
 
     - name: Run Cypress not snapshot tests on Currents.dev
