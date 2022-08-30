@@ -4,12 +4,6 @@ inputs:
   github_token:
     description: 'Github token'
     required: false
-  username:
-    description: "Username for test run"
-    required: true
-  password: 
-    description: "Password for Username"
-    required: true
   url:
     description: "Name of the test url (dev, staging, prod, custom)"
     required: true
@@ -25,9 +19,6 @@ inputs:
     description: "Tags for cypress-grep"
     required: true
     default: grep=,grepTags=@smoke,burn=
-  record_key:
-    description: "record key used to activate test results recording on Dashboard"
-    required: true
   grep_filter_specs:
     description: "Skip test specs when using cypress-grep from tag retrieve"
     required: false
@@ -44,12 +35,10 @@ runs:
       shell: bash
       run: |
           echo "github_token=${{ inputs.github_token }}"
-          echo "username=${{ inputs.USERNAME }}"
           echo "url=${{ inputs.url }}"
           echo "customUrl=${{ inputs.customUrl }}"
           echo "spec_file=${{ inputs.spec_file }}"
           echo "tags=${{ inputs.tags }}"
-          echo "record_key=${{ inputs.record_key }}"
 
     - name: Checkout
       uses: actions/checkout@v3
@@ -83,14 +72,10 @@ runs:
             Github/Cypress/Current_Dev_Record_Key
           namespace: false
 
-
-
     - name: Run Cypress not snapshot tests on Currents.dev
-      run: currents run --config-file cypress.config.ts --tag ${{ inputs.url }} --spec ${{ inputs.spec_file }} --env ${{ inputs.tags }} --browser chrome --record --parallel --key ${{ inputs.record_key }} --ci-build-id "${{ github.repository }}-${{ github.run_id }}-${{ github.job }}-${{ github.run_attempt}}"
+      run: currents run --config-file cypress.config.ts --tag ${{ inputs.url }} --spec ${{ inputs.spec_file }} --env ${{ inputs.tags }} --browser chrome --record --parallel --key ${{ env.CYPRESS_CURRENTS_RECORD_KEY }} --ci-build-id "${{ github.repository }}-${{ github.run_id }}-${{ github.job }}-${{ github.run_attempt}}"
       shell: bash  
       env:
-        CYPRESS_USERNAME: ${{ inputs.USERNAME }}
-        CYPRESS_PASSWORD: ${{ inputs.PASSWORD }}
         CYPRESS_url: ${{ inputs.url }}
         CYPRESS_customUrl: ${{ inputs.customUrl == '' && '' ||  inputs.customUrl }}
         CYPRESS_grepFilterSpecs: ${{ inputs.grep_filter_specs }}
