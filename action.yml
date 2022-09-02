@@ -4,12 +4,6 @@ inputs:
   github_token:
     description: 'Github token'
     required: false
-  username:
-    description: "Username for test run"
-    required: true
-  password: 
-    description: "Password for Username"
-    required: true
   url:
     description: "Name of the test url (dev, staging, prod, custom)"
     required: true
@@ -20,20 +14,20 @@ inputs:
   spec_file:
     description: "--spec flag arg in cypress cli"
     required: true
-    default: "cypress/integration/**/*.spec.ts"
+    default: cypress/integration/**
   tags:
     description: "Tags for cypress-grep"
     required: true
     default: grep=,grepTags=@smoke,burn=
-  record_key:
-    description: "record key used to activate test results recording on Dashboard"
-    required: true
   grep_filter_specs:
     description: "Skip test specs when using cypress-grep from tag retrieve"
     required: false
     default: 'true'
   ref:
     description: "`ref` param for actions/checkout"
+    required: false
+  secret_name:
+    description: "Name of the secret in aws secret manager"
     required: false
 
 runs:
@@ -44,12 +38,10 @@ runs:
       shell: bash
       run: |
           echo "github_token=${{ inputs.github_token }}"
-          echo "username=${{ inputs.USERNAME }}"
           echo "url=${{ inputs.url }}"
           echo "customUrl=${{ inputs.customUrl }}"
           echo "spec_file=${{ inputs.spec_file }}"
           echo "tags=${{ inputs.tags }}"
-          echo "record_key=${{ inputs.record_key }}"
 
     - name: Checkout
       uses: actions/checkout@v3
@@ -57,38 +49,27 @@ runs:
         repository: 'Bowery-RES/webapp-ui-automation'
         token: ${{ inputs.github_token }}
         ref: ${{ inputs.ref }}
-
-    - name: Install Dependencies
-      uses: bahmutov/npm-install@v1.8.21
-
-    - name: Install Cypress globally
-      run: npm i cypress@10.3.1 -g
-      shell: bash
     
+    - name: Install Dependencies
+      uses: bahmutov/npm-install@v1.8.21    
+
     - name: Install Currents globally
       run: npm i @currents/cli -g
       shell: bash
 
-    - name: Configure secrets
-      uses: aws-actions/configure-aws-credentials@v1
-      with:
-          role-to-assume: arn:aws:iam::814827541967:role/GithubOIDC-Role-QMKR3DR5WV3B
-          aws-region: 'us-east-1'
 
     - name: Set secrets to GH environment
+      if: ${{ !env.ACT }} 
       uses: Bowery-RES/action-aws-secrets@v1.2
       with:
           secrets: |
-            Github/Cypress/User_Roles
-            Github/Cypress/Launch_Darkly
+            ${{ inputs.secret_name }}
           namespace: false
 
     - name: Run Cypress not snapshot tests on Currents.dev
-      run: currents run --config-file cypress.config.ts --tag ${{ inputs.url }} --spec ${{ inputs.spec_file }} --env ${{ inputs.tags }} --browser chrome --record --parallel --key ${{ inputs.record_key }} --ci-build-id "${{ github.repository }}-${{ github.run_id }}-${{ github.job }}-${{ github.run_attempt}}"
+      run: currents run --config-file cypress.config.ts --tag ${{ inputs.url }} --spec ${{ inputs.spec_file }} --env ${{ inputs.tags }} --browser chrome --record --parallel --key ${{ env.CYPRESS_CURRENTS_RECORD_KEY }} --ci-build-id "${{ github.repository }}-${{ github.run_id }}-${{ github.job }}-${{ github.run_attempt}}"
       shell: bash  
       env:
-        CYPRESS_USERNAME: ${{ inputs.USERNAME }}
-        CYPRESS_PASSWORD: ${{ inputs.PASSWORD }}
         CYPRESS_url: ${{ inputs.url }}
         CYPRESS_customUrl: ${{ inputs.customUrl == '' && '' ||  inputs.customUrl }}
         CYPRESS_grepFilterSpecs: ${{ inputs.grep_filter_specs }}
