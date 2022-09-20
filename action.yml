@@ -18,11 +18,7 @@ inputs:
   tags:
     description: "Tags for cypress-grep"
     required: true
-    default: grep=,grepTags=@smoke,burn=
-  grep_filter_specs:
-    description: "Skip test specs when using cypress-grep from tag retrieve"
-    required: false
-    default: 'true'
+    default: grepTags=@smoke
   ref:
     description: "`ref` param for actions/checkout"
     required: false
@@ -72,4 +68,3 @@ runs:
       env:
         CYPRESS_url: ${{ inputs.url }}
         CYPRESS_customUrl: ${{ inputs.customUrl == '' && '' ||  inputs.customUrl }}
-        CYPRESS_grepFilterSpecs: ${{ inputs.grep_filter_specs }}
