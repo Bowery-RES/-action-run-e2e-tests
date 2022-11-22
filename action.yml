@@ -11,9 +11,11 @@ inputs:
   customUrl:
     description: 'Url of custom env (PR deploy, dev/prod env)'
     required: false
-  spec_file:
-    description: '--spec flag arg in cypress cli'
+  tests:
+    description: 'Tests to run'
     required: true
+  workers:
+    description: 'Numbers of worker threads to be spawned'
   ref:
     description: '`ref` param for actions/checkout'
     required: false
@@ -30,8 +32,9 @@ runs:
           echo "github_token=${{ inputs.github_token }}"
           echo "url=${{ inputs.url }}"
           echo "customUrl=${{ inputs.customUrl }}"
-          echo "spec_file=${{ inputs.spec_file }}"
-          echo "tags=${{ inputs.tags }}"
+          echo "tests=${{ inputs.tests }}"
+          echo "workers=${{ inputs.workers }}"
+          echo "ref=${{ inputs.ref }}"
 
     - name: Checkout
       uses: actions/checkout@v3
@@ -41,11 +44,7 @@ runs:
         ref: ${{ inputs.ref }}
     
     - name: Install Dependencies
-      uses: bahmutov/npm-install@v1.8.21    
-
-    - name: Install Currents globally
-      run: npm i @currents/cli -g
-      shell: bash
+      uses: bahmutov/npm-install@v1.8.25  
 
     - name: Set secrets to GH environment
       if: ${{ !env.ACT }} 
@@ -55,9 +54,9 @@ runs:
             ${{ inputs.secret_name }}
           namespace: false
 
-    - name: Run Cypress not snapshot tests on Currents.dev
-      run: currents run --config-file cypress.config.ts --tag ${{ inputs.url }} --spec ${{ inputs.spec_file }} --env ${{ inputs.tags }} --browser chrome --record --parallel --key ${{ env.CYPRESS_CURRENTS_RECORD_KEY }} --ci-build-id "${{ github.repository }}-${{ github.run_id }}-${{ github.job }}-${{ github.run_attempt}}"
-      shell: bash  
+    - name: Run Playwright end-to-end tests
+      run: npm run test:ci -- ${{ inputs.tests }} --workers ${{ inputs.workers }}
+      shell: bash
       env:
         ENV: ${{ inputs.url }}
         URL: ${{ inputs.customUrl == '' && '' ||  inputs.customUrl }}
