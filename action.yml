@@ -6,7 +6,7 @@ inputs:
     required: true
   url:
     description: "Name of the test url (dev, staging, prod, custom)"
-    required: true
+    required: false
     default: dev
   customUrl:
     description: 'Url of custom env (PR deploy, dev/prod env)'
