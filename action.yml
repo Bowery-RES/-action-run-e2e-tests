@@ -16,6 +16,8 @@ inputs:
     required: true
   workers:
     description: 'Numbers of worker threads to be spawned'
+    required: false
+    default: '2'
   ref:
     description: '`ref` param for actions/checkout'
     required: false
@@ -43,8 +45,17 @@ runs:
         token: ${{ inputs.github_token }}
         ref: ${{ inputs.ref }}
     
+    - name: Setup node to 16.x
+      uses: actions/setup-node@v2
+      with:
+        node-version: "16.x"
+    
     - name: Install Dependencies
       uses: bahmutov/npm-install@v1.8.25  
+    
+    - name: Install Playwright Browsers (Chromium ONLY)
+      shell: bash
+      run: npx playwright install chromium
 
     - name: Set secrets to GH environment
       if: ${{ !env.ACT }} 
