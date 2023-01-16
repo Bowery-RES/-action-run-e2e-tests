@@ -56,6 +56,10 @@ runs:
     - name: Install Playwright Browsers (Chromium ONLY)
       shell: bash
       run: npx playwright install chromium
+      
+    - name: Authenticate with private NPM package
+      shell: bash
+      run: echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}" > ~/.npmrc
 
     - name: Set secrets to GH environment
       if: ${{ !env.ACT }} 
