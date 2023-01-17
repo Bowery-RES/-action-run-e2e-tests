@@ -59,7 +59,7 @@ runs:
       
     - name: Authenticate with private NPM package
       shell: bash
-      run: echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}" > ~/.npmrc
+      run: echo "//registry.npmjs.org/:_authToken=${{ env.NPM_TOKEN }}" > ~/.npmrc
 
     - name: Set secrets to GH environment
       if: ${{ !env.ACT }} 
