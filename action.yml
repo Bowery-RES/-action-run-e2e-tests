@@ -50,7 +50,7 @@ runs:
       uses: bahmutov/npm-install@v1.8.21    
 
     - name: Install Currents globally
-      run: npm i @currents/cli -g
+      run: npm i @currents/cli@beta -g
       shell: bash
 
 
