@@ -62,6 +62,10 @@ runs:
             ${{ inputs.secret_name }}
           namespace: false
 
+    - name: Show Cypress' info
+      shell: bash
+      run: cypress info
+
     - name: Run Cypress not snapshot tests on Currents.dev
       run: currents run --config-file cypress.config.ts --tag ${{ inputs.url }} --spec ${{ inputs.spec_file }} --env ${{ inputs.tags }} --browser chrome --record --parallel --key ${{ env.CYPRESS_CURRENTS_RECORD_KEY }} --ci-build-id "${{ github.repository }}-${{ github.run_id }}-${{ github.job }}-${{ github.run_attempt}}"
       shell: bash  
