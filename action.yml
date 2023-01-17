@@ -45,7 +45,7 @@ runs:
         token: ${{ inputs.github_token }}
         ref: ${{ inputs.ref }}
     
-    - name: Setup node to 16.x
+    - name: Setup node to lts
       uses: actions/setup-node@v2
       with:
         node-version: 18
