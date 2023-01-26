@@ -45,14 +45,15 @@ runs:
         repository: 'Bowery-RES/webapp-ui-automation'
         token: ${{ inputs.github_token }}
         ref: ${{ inputs.ref }}
-    
-    - name: Install Dependencies
-      uses: bahmutov/npm-install@v1.8.21    
 
     - name: Install Currents globally
-      run: npm i @currents/cli@beta -g
+      run: npm i @currents/cli@v4.0.2 -g
       shell: bash
 
+    - name: Install Dependencies
+      uses: bahmutov/npm-install@v1.8.21
+      env:
+        NODE_ENV: production
 
     - name: Set secrets to GH environment
       if: ${{ !env.ACT }} 
