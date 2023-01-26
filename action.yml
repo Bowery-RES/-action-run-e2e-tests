@@ -67,9 +67,14 @@ runs:
       shell: bash
       run: cypress info
 
+    - name: Show ENV info
+      shell: bash
+      run: npx envinfo --system --binaries --browsers --npmPackages --duplicates --npmGlobalPackages
+
     - name: Run Cypress not snapshot tests on Currents.dev
       run: currents run --config-file cypress.config.ts --tag ${{ inputs.url }} --spec ${{ inputs.spec_file }} --env ${{ inputs.tags }} --browser chrome --record --parallel --key ${{ env.CYPRESS_CURRENTS_RECORD_KEY }} --ci-build-id "${{ github.repository }}-${{ github.run_id }}-${{ github.job }}-${{ github.run_attempt}}"
       shell: bash  
       env:
+        DEBUG: cy2*,cypress:*
         CYPRESS_url: ${{ inputs.url }}
         CYPRESS_customUrl: ${{ inputs.customUrl == '' && '' ||  inputs.customUrl }}
