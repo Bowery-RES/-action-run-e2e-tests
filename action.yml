@@ -1,28 +1,28 @@
-name: 'Run Playwright tests'
-description: 'Runs Playwright end-to-end tests in CI'
+name: "Run Playwright tests"
+description: "Runs Playwright end-to-end tests in CI"
 inputs:
   github_token:
-    description: 'Github token'
+    description: "Github token"
     required: true
   url:
     description: "Name of the test url (dev, staging, prod, custom)"
     required: false
     default: dev
   customUrl:
-    description: 'Url of custom env (PR deploy, dev/prod env)'
+    description: "Url of custom env (PR deploy, dev/prod env)"
     required: false
   tests:
-    description: 'Tests to run'
+    description: "Tests to run"
     required: true
   workers:
-    description: 'Numbers of worker threads to be spawned'
+    description: "Numbers of worker threads to be spawned"
     required: false
-    default: '2'
+    default: "2"
   ref:
-    description: '`ref` param for actions/checkout'
+    description: "`ref` param for actions/checkout"
     required: false
   secret_name:
-    description: 'Name of the secret in aws secret manager'
+    description: "Name of the secret in aws secret manager"
     required: true
 
 runs:
@@ -31,43 +31,43 @@ runs:
     - name: Show action's inputs
       shell: bash
       run: |
-          echo "github_token=${{ inputs.github_token }}"
-          echo "url=${{ inputs.url }}"
-          echo "customUrl=${{ inputs.customUrl }}"
-          echo "tests=${{ inputs.tests }}"
-          echo "workers=${{ inputs.workers }}"
-          echo "ref=${{ inputs.ref }}"
+        echo "github_token=${{ inputs.github_token }}"
+        echo "url=${{ inputs.url }}"
+        echo "customUrl=${{ inputs.customUrl }}"
+        echo "tests=${{ inputs.tests }}"
+        echo "workers=${{ inputs.workers }}"
+        echo "ref=${{ inputs.ref }}"
 
     - name: Checkout
       uses: actions/checkout@v3
       with:
-        repository: 'Bowery-RES/webapp-ui-automation-pw'
+        repository: "Bowery-RES/webapp-ui-automation-pw"
         token: ${{ inputs.github_token }}
         ref: ${{ inputs.ref }}
-    
+
     - name: Setup node to lts
-      uses: actions/setup-node@v2
+      uses: actions/setup-node@v3
       with:
         node-version: 18
-    
+
     - name: Install Dependencies
-      uses: bahmutov/npm-install@v1.8.25  
-    
+      uses: bahmutov/npm-install@v1.8.25
+
     - name: Install Playwright Browsers (Chromium ONLY)
       shell: bash
       run: npx playwright install chromium
-      
+
     - name: Authenticate with private NPM package
       shell: bash
       run: echo "//registry.npmjs.org/:_authToken=${{ env.NPM_TOKEN }}" > ~/.npmrc
 
     - name: Set secrets to GH environment
-      if: ${{ !env.ACT }} 
-      uses: Bowery-RES/action-aws-secrets@v1.2
+      if: ${{ !env.ACT }}
+      uses: Bowery-RES/action-aws-secrets@v1
       with:
-          secrets: |
-            ${{ inputs.secret_name }}
-          namespace: false
+        secrets: |
+          ${{ inputs.secret_name }}
+        namespace: false
 
     - name: Run Playwright end-to-end tests
       run: npm run test:ci -- ${{ inputs.tests }} --workers ${{ inputs.workers }}
