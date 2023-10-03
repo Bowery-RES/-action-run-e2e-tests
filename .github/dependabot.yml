@@ -11,4 +11,4 @@ updates:
       # Check for updates to GitHub Actions every week
       interval: "weekly"
     reviewers:
-      - "Yeti"
+      - "Bowery-RES/Yeti"
