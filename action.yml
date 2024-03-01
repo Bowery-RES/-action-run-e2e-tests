@@ -51,7 +51,7 @@ runs:
         node-version: 18
 
     - name: Install Dependencies
-      uses: bahmutov/npm-install@v1.8.36
+      uses: bahmutov/npm-install@v1.10.1
 
     - name: Install Playwright Browsers (Chromium ONLY)
       shell: bash
